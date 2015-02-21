@@ -1,0 +1,44 @@
+apply plugin: 'scala'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.scala-lang:scala-library:2.11.5'
+    compile 'org.scalatest:scalatest_2.11:2.2.4'
+}
+
+sourceSets {
+    main {
+        scala {
+            srcDirs = ['src/scala']
+        }
+    }
+    test {
+        scala {
+            srcDirs = ['test/scala']
+        }
+    }
+}
+
+//task test(overwrite: true, dependsOn: ['testClasses']) << {
+//    ant.taskdef(name: 'scalatest',
+//        classname: 'org.scalatest.tools.ScalaTestAntTask',
+//        classpath: sourceSets.test.runtimeClasspath.asPath
+//    )
+//    ant.scalatest(runpath: sourceSets.test.runtimeClasspath,
+//        haltonfailure: 'true',
+//        fork: 'false') {reporter(type: 'stdout')}
+//}
+
+task spec(dependsOn: ['testClasses'], type: JavaExec) {
+  main = 'org.scalatest.tools.Runner'
+  args = ['-R', 'build/classes/test', '-o']
+  classpath = sourceSets.test.runtimeClasspath
+}
+//task test(overwrite: true, dependsOn: ['testClasses'], type: JavaExec) {
+//  main = 'org.scalatest.tools.Runner'
+//  args = ['-R', 'build/classes/test', '-o']
+//  classpath = sourceSets.test.runtimeClasspath
+//}
